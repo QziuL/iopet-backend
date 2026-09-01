@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 @Service
 public class ImplTutorService implements ITutorService {
@@ -16,24 +17,24 @@ public class ImplTutorService implements ITutorService {
         this.tutorRepository = tutorRepository;
     }
 
-    @Override
-    public List<Tutor> listar() {
-        return List.of();
-    }
+//    @Override
+//    public List<Tutor> listar() {
+//        return List.of();
+//    }
 
     @Override
-    public Optional<Tutor> encontrarPorUuid(String uuid) {
-        return Optional.empty();
+    public Optional<Tutor> encontrarPorUuid(UUID uuid) {
+        return this.tutorRepository.findByUuid(uuid);
     }
 
     @Override
     public Optional<Tutor> encontrarPorEmail(String email) {
-        return Optional.empty();
+        return this.tutorRepository.findByEmail(email);
     }
 
     @Override
     public Tutor cadastrar(Tutor tutor) {
-        return null;
+        return this.tutorRepository.save(tutor);
     }
 
     @Override
@@ -42,7 +43,8 @@ public class ImplTutorService implements ITutorService {
     }
 
     @Override
-    public boolean deletar(Long id) {
-        return false;
+    public void excluirConta(UUID uuid) {
+        Optional<Tutor> tutor = tutorRepository.findByUuid(uuid);
+        tutor.ifPresent(tutorRepository::delete);
     }
 }
