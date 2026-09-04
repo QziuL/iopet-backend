@@ -23,7 +23,7 @@ public class AlertaGeofecing {
 
     // Relacionamento Muitos-para-Um com HistoricoLocalizacao
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "historico_localizacao_id", nullable = false)
+    @JoinColumn(name = "historico_localizacao_id", referencedColumnName = "id", nullable = false)
     private HistoricoLocalizacao historicoLocalizacao;
 
     @Column(nullable = false, length = 255)

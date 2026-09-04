@@ -26,7 +26,8 @@ public class DispositivoIot {
     @JoinColumn(name = "pet_id", referencedColumnName = "id")
     private Pet pet;
 
-    @OneToMany(mappedBy = "dispositivo_iot", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    // Relacionamento Um-para-Muitos com HistoricoLocalizacao
+    @OneToMany(mappedBy = "dispositivoIot", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     private List<HistoricoLocalizacao> historicoLocalizacao = new ArrayList<>();
 
     @Column( name = "bateria_nivel", nullable = false)
@@ -41,5 +42,11 @@ public class DispositivoIot {
     @PrePersist
     protected void onCreate() {
         this.ultimaLocalizacao = LocalDateTime.now();
+    }
+
+    // Métodos utilitários para manter a consistência bidirecional
+    public void addHistorico(HistoricoLocalizacao historico) {
+        this.historicoLocalizacao.add(historico);
+        historico.setDispositivoIot(this);
     }
 }
