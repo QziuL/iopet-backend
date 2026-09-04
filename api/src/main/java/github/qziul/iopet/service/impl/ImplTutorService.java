@@ -3,6 +3,7 @@ package github.qziul.iopet.service.impl;
 import github.qziul.iopet.domain.model.Tutor;
 import github.qziul.iopet.domain.repository.TutorRepository;
 import github.qziul.iopet.service.ITutorService;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -12,6 +13,7 @@ import java.util.UUID;
 @Service
 public class ImplTutorService implements ITutorService {
     private final TutorRepository tutorRepository;
+    private final BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
     public ImplTutorService(TutorRepository tutorRepository) {
         this.tutorRepository = tutorRepository;
@@ -34,6 +36,7 @@ public class ImplTutorService implements ITutorService {
 
     @Override
     public Tutor cadastrar(Tutor tutor) {
+        tutor.setSenha(passwordEncoder.encode(tutor.getSenha()));
         return this.tutorRepository.save(tutor);
     }
 
