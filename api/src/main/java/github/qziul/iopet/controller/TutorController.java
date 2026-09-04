@@ -20,18 +20,25 @@ public class TutorController {
         this.tutorService = tutorService;
     }
 
+    /*
     @PostMapping
     public ResponseEntity<TutorResponseDTO> cadastrar(@RequestBody TutorRequestDTO requestDto) {
+        if(this.tutorService.encontrarPorEmail(requestDto.email()).isPresent()) {
+            return ResponseEntity.status(HttpStatus.CONFLICT).build();
+        }
+
         Tutor novoTutor = new Tutor();
-        novoTutor.setNome(requestDto.getNome());
-        novoTutor.setEmail(requestDto.getEmail());
-        novoTutor.setSenha(requestDto.getSenha());
-        novoTutor.setUrlFoto(requestDto.getUrlFoto());
+        novoTutor.setNome(requestDto.nome());
+        novoTutor.setEmail(requestDto.email());
+        novoTutor.setSenha(requestDto.senha());
+        novoTutor.setUrlFoto(requestDto.urlFoto());
 
         Tutor tutorSalvo = tutorService.cadastrar(novoTutor);
         TutorResponseDTO tutorResponseDTO = new TutorResponseDTO(tutorSalvo);
+
         return ResponseEntity.status(HttpStatus.CREATED).body(tutorResponseDTO);
     }
+    */
 
     @GetMapping("/{uuid}")
     public ResponseEntity<TutorResponseDTO> buscarPorUuid(@PathVariable UUID uuid) {
