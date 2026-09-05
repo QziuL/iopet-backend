@@ -37,6 +37,12 @@
 			<artifactId>java-jwt</artifactId>
 			<version>4.4.0</version>
 		</dependency>
+		<!-- Flyway Starter (Spring Boot 4) -->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-flyway</artifactId>
+		</dependency>
+
 		<!-- Flyway Core -->
 		<dependency>
 			<groupId>org.flywaydb</groupId>
