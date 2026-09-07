@@ -28,7 +28,7 @@ public class Tutor implements UserDetails {
     private List<Pet> pets = new ArrayList<>();
 
     // ID público para rotas API exposta
-    @Column(nullable = false, unique = true)
+    @Column(name = "id_publico", nullable = false, unique = true)
     private UUID uuid = UUID.randomUUID();
 
     @NotBlank

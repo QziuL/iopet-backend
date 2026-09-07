@@ -21,7 +21,7 @@ public class Pet {
     private Long id;
 
     // Chave pública exposta
-    @Column(nullable = false, unique = true)
+    @Column(name = "id_publico", nullable = false, unique = true)
     private UUID uuid = UUID.randomUUID();
 
     // Relacionamento Muitos-para-Um com Tutor
