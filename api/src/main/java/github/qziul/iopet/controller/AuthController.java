@@ -48,6 +48,7 @@ public class AuthController {
     @PostMapping("/register")
     public ResponseEntity<AuthResponseDTO> efetuarCadastroTutor(@RequestBody TutorRequestDTO dados) {
         if(this.tutorService.encontrarPorEmail(dados.email()).isPresent()) {
+            System.out.println("Email existente..");
             return ResponseEntity.status(HttpStatus.CONFLICT).build();
         }
 
@@ -55,6 +56,7 @@ public class AuthController {
         novoTutor.setNome(dados.nome());
         novoTutor.setEmail(dados.email());
         novoTutor.setSenha(dados.senha());
+        novoTutor.setTelefone(dados.telefone());
         novoTutor.setUrlFoto(dados.urlFoto());
 
         Tutor tutorSalvo = tutorService.cadastrar(novoTutor);
