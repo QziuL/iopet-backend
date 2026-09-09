@@ -60,6 +60,9 @@ public class Pet {
     @Column(length = 500)
     private String descricao;
 
+    @Column(nullable = false)
+    private String sexo;
+
     // Campo geométrico PostGIS
     @Column(name = "zona_seguranca", columnDefinition = "geometry(Polygon, 4326)")
     private Geometry zonaSeguranca;
