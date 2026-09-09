@@ -1,16 +1,18 @@
 package github.qziul.iopet.service;
 
+import github.qziul.iopet.controller.dto.request.PetRequestDTO;
 import github.qziul.iopet.domain.model.Pet;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 public interface IPetService {
     List<Pet> listar();
-    Optional<Pet> encontrarPorUuid(String uuid);
+    Optional<Pet> encontrarPorUuid(UUID uuid);
     Optional<Pet> listarPorNome(String nome);
-    Pet cadastrar(Pet pet, Long idTutor); // To-Do PetDTO
+    Pet cadastrar(PetRequestDTO petDTO);
     Pet atualizar(Pet pet);
-    boolean deletar(Long idPet);
+    void deletar(UUID idPet);
     boolean vincularDispositivoIot(Long petId, String enderecoMac);
 }
