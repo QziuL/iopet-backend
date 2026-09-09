@@ -1,0 +1,49 @@
+package github.qziul.iopet.controller;
+
+import github.qziul.iopet.controller.dto.request.PetRequestDTO;
+import github.qziul.iopet.controller.dto.response.PetResponseDTO;
+import github.qziul.iopet.domain.model.Pet;
+import github.qziul.iopet.service.IPetService;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.UUID;
+
+@RestController
+@RequestMapping("/api/pets")
+public class PetController {
+    private final IPetService petService;
+
+    public  PetController(IPetService petService) {
+        this.petService = petService;
+    }
+
+    @PostMapping
+    public ResponseEntity<PetResponseDTO> cadastrar(@RequestBody PetRequestDTO petRequestDTO) {
+        Pet petSalvo = this.petService.cadastrar(petRequestDTO);
+        return ResponseEntity.status(HttpStatus.CREATED).body(new PetResponseDTO(petSalvo));
+    }
+
+    @GetMapping("/{uuid}")
+    public ResponseEntity<PetResponseDTO> buscarPorUuid(@PathVariable UUID uuid) {
+        return this.petService.encontrarPorUuid(uuid)
+                .map(PetResponseDTO::new)
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.status(HttpStatus.NOT_FOUND).build());
+    }
+
+    @GetMapping("/{nome}")
+    public ResponseEntity<PetResponseDTO> buscarPorNome(@PathVariable String nome) {
+        return this.petService.listarPorNome(nome)
+                .map(PetResponseDTO::new)
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.status(HttpStatus.NOT_FOUND).build());
+    }
+
+    @DeleteMapping
+    public ResponseEntity<Void> deletar(@RequestParam("uuid") UUID uuid) {
+        this.petService.deletar(uuid);
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+    }
+}
