@@ -20,41 +20,17 @@ public class TutorController {
         this.tutorService = tutorService;
     }
 
-    /*
-    @PostMapping
-    public ResponseEntity<TutorResponseDTO> cadastrar(@RequestBody TutorRequestDTO requestDto) {
-        if(this.tutorService.encontrarPorEmail(requestDto.email()).isPresent()) {
-            return ResponseEntity.status(HttpStatus.CONFLICT).build();
-        }
-
-        Tutor novoTutor = new Tutor();
-        novoTutor.setNome(requestDto.nome());
-        novoTutor.setEmail(requestDto.email());
-        novoTutor.setSenha(requestDto.senha());
-        novoTutor.setUrlFoto(requestDto.urlFoto());
-
-        Tutor tutorSalvo = tutorService.cadastrar(novoTutor);
-        TutorResponseDTO tutorResponseDTO = new TutorResponseDTO(tutorSalvo);
-
-        return ResponseEntity.status(HttpStatus.CREATED).body(tutorResponseDTO);
-    }
-    */
-
     @GetMapping("/{uuid}")
     public ResponseEntity<TutorResponseDTO> buscarPorUuid(@PathVariable UUID uuid) {
-        Optional<Tutor> tutorEncontrado = tutorService.encontrarPorUuid(uuid);
-
-        if (tutorEncontrado.isPresent()) {
-            TutorResponseDTO responseDTO = new TutorResponseDTO(tutorEncontrado.get());
-            return ResponseEntity.ok(responseDTO);
-        } else {
-            return ResponseEntity.notFound().build();
-        }
+        return this.tutorService.encontrarPorUuid(uuid)
+                .map(TutorResponseDTO::new)
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.status(HttpStatus.NOT_FOUND).build());
     }
 
     @DeleteMapping("/{uuid}")
     public ResponseEntity<Void> excluirConta(@PathVariable UUID uuid) {
         tutorService.excluirConta(uuid);
-        return ResponseEntity.noContent().build();
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 }
