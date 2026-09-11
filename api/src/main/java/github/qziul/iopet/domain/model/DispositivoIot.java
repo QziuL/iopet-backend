@@ -34,7 +34,7 @@ public class DispositivoIot {
     private int bateriaNivel;
 
     @Column(nullable = false)
-    private Boolean ativo;
+    private boolean ativo;
 
     @Column(name = "ultima_localizacao", nullable = false)
     private LocalDateTime ultimaLocalizacao;
@@ -42,6 +42,7 @@ public class DispositivoIot {
     @PrePersist
     protected void onCreate() {
         this.ultimaLocalizacao = LocalDateTime.now();
+        this.bateriaNivel = 0;
     }
 
     // Métodos utilitários para manter a consistência bidirecional
