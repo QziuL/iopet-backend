@@ -29,13 +29,8 @@ public class ImplDispositivoIotService implements IDispositivoIotService {
                 () -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Pet nao encontrado.")
         );
 
-        DispositivoIot dispositivo = this.repository.findById(enderecoMac).orElseGet(
-                () -> {
-                    DispositivoIot novoDispositivo = new DispositivoIot();
-                    novoDispositivo.setEnderecoMac(enderecoMac);
-                    return this.repository.save(novoDispositivo);
-                }
-        );
+        DispositivoIot dispositivo = this.repository.findById(enderecoMac)
+                                                    .orElseGet(() -> this.cadastrar(enderecoMac));
 
         if(dispositivo.getPet() != null)
             throw new ResponseStatusException(HttpStatus.CONFLICT, "Dispositivo já está vinculado a outro pet.");
@@ -44,5 +39,11 @@ public class ImplDispositivoIotService implements IDispositivoIotService {
         dispositivo.setEnderecoMac(enderecoMac);
         dispositivo.setAtivo(true);
         this.repository.save(dispositivo);
+    }
+
+    private DispositivoIot cadastrar(String enderecoMac) {
+        DispositivoIot novoDispositivo = new DispositivoIot();
+        novoDispositivo.setEnderecoMac(enderecoMac);
+        return this.repository.save(novoDispositivo);
     }
 }
