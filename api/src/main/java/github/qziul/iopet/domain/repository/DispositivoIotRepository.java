@@ -7,6 +7,4 @@ import org.springframework.stereotype.Repository;
 import java.util.Optional;
 
 @Repository
-public interface DispositivoIotRepository extends JpaRepository<DispositivoIot, String> {
-    Optional<DispositivoIot> findByEnderecoMac(String enderecoMac);
-}
+public interface DispositivoIotRepository extends JpaRepository<DispositivoIot, String> { }
