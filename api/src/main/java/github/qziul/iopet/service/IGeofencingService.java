@@ -1,8 +1,8 @@
 package github.qziul.iopet.service;
 
-import github.qziul.iopet.domain.model.AlertaGeofecing;
+import github.qziul.iopet.domain.model.AlertaGeofencing;
 
 public interface IGeofencingService {
     boolean verificarLimitesGeofecing(Long petId, double latitude, double longitude);
-    AlertaGeofecing registrarAlertaFuga(Long petId);
+    AlertaGeofencing registrarAlertaFuga(Long petId);
 }
