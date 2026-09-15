@@ -36,12 +36,12 @@ public class DispositivoIot {
     @Column(nullable = false)
     private boolean ativo;
 
-    @Column(name = "ultima_localizacao", nullable = false)
-    private LocalDateTime ultimaLocalizacao;
+    @Column(name = "ultima_comunicacao", nullable = false)
+    private LocalDateTime ultimaComunicacao;
 
     @PrePersist
     protected void onCreate() {
-        this.ultimaLocalizacao = LocalDateTime.now();
+        this.ultimaComunicacao = LocalDateTime.now();
         this.bateriaNivel = 0;
     }
 
