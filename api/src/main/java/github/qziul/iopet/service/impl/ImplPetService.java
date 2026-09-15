@@ -4,6 +4,7 @@ import github.qziul.iopet.controller.dto.request.PetRequestDTO;
 import github.qziul.iopet.domain.model.Pet;
 import github.qziul.iopet.domain.model.Tutor;
 import github.qziul.iopet.domain.repository.PetRepository;
+ import github.qziul.iopet.service.IDispositivoIotService;
 import github.qziul.iopet.service.IPetService;
 import github.qziul.iopet.service.ITutorService;
 import org.springframework.http.HttpStatus;
@@ -11,24 +12,28 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 
 @Service
 public class ImplPetService implements IPetService {
     private final PetRepository petRepository;
     private final ITutorService tutorService;
+    private final IDispositivoIotService dispositivoService;
 
-    public ImplPetService(PetRepository petRepository, ITutorService tutorService) {
+    public ImplPetService(PetRepository petRepository,
+                          ITutorService tutorService,
+                          IDispositivoIotService dispositivoService
+    )
+    {
         this.petRepository = petRepository;
         this.tutorService = tutorService;
+        this.dispositivoService = dispositivoService;
     }
 
     @Override
     @Transactional(readOnly = true)
-    public List<Pet> listar() {
-        return this.petRepository.findAll();
+    public List<Pet> listarPetsDoTutor(Long tutorId) {
+        return this.petRepository.findByTutorId(tutorId);
     }
 
     @Override
@@ -39,7 +44,7 @@ public class ImplPetService implements IPetService {
 
     @Override
     @Transactional(readOnly = true)
-    public Optional<Pet> listarPorNome(String nome) {
+    public Optional<Pet> encontrarPorNome(String nome) {
         return this.petRepository.findByNome(nome);
     }
 
@@ -69,7 +74,7 @@ public class ImplPetService implements IPetService {
 
     @Override
     @Transactional
-    public boolean vincularDispositivoIot(Long petId, String enderecoMac) {
-        return false;
+    public void vincularDispositivoIot(UUID idPublicoPet, String enderecoMac) {
+        this.dispositivoService.vincularDispositivoAoPet(idPublicoPet, enderecoMac);
     }
 }

@@ -3,12 +3,15 @@ package github.qziul.iopet.controller;
 import github.qziul.iopet.controller.dto.request.PetRequestDTO;
 import github.qziul.iopet.controller.dto.response.PetResponseDTO;
 import github.qziul.iopet.domain.model.Pet;
+import github.qziul.iopet.domain.model.Tutor;
 import github.qziul.iopet.service.IPetService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.UUID;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/pets")
@@ -25,6 +28,15 @@ public class PetController {
         return ResponseEntity.status(HttpStatus.CREATED).body(new PetResponseDTO(petSalvo));
     }
 
+    @GetMapping
+    public ResponseEntity<List<PetResponseDTO>> listar(@AuthenticationPrincipal Tutor tutor) {
+        List<Pet> pets = this.petService.listarPetsDoTutor(tutor.getId());
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(pets.stream()
+                        .map(PetResponseDTO::new)
+                        .collect(Collectors.toList()));
+    }
+
     @GetMapping("/{uuid}")
     public ResponseEntity<PetResponseDTO> buscarPorUuid(@PathVariable UUID uuid) {
         return this.petService.encontrarPorUuid(uuid)
@@ -35,15 +47,29 @@ public class PetController {
 
     @GetMapping("/{nome}")
     public ResponseEntity<PetResponseDTO> buscarPorNome(@PathVariable String nome) {
-        return this.petService.listarPorNome(nome)
+        return this.petService.encontrarPorNome(nome)
                 .map(PetResponseDTO::new)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.status(HttpStatus.NOT_FOUND).build());
     }
 
-    @DeleteMapping
+    @PutMapping("/{uuid}")
+    public ResponseEntity<PetResponseDTO> atualizar(@RequestBody PetRequestDTO petRequestDTO,
+                                                    @AuthenticationPrincipal Tutor tutor) {
+        Pet petAtualizado = this.petService.atualizar(PetRequestDTO.toEntity(petRequestDTO, tutor));
+        return ResponseEntity.status(HttpStatus.OK).body(new PetResponseDTO(petAtualizado));
+    }
+
+    @DeleteMapping("/{uuid}")
     public ResponseEntity<Void> deletar(@RequestParam("uuid") UUID uuid) {
         this.petService.deletar(uuid);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+    }
+
+    @PutMapping("/{uuid}/vincular-dispositivo")
+    public ResponseEntity<Void> vincularDispositivoAoPet(@RequestBody String enderecoMac,
+                                                         @PathVariable UUID idPublicoPet) {
+        this.petService.vincularDispositivoIot(idPublicoPet, enderecoMac);
+        return ResponseEntity.status(HttpStatus.OK).build();
     }
 }
