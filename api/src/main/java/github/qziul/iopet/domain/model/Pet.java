@@ -34,9 +34,9 @@ public class Pet {
     @OneToOne(mappedBy = "pet")
     private DispositivoIot dispositivoIot;
 
-    // Relacionamento Um-para-Muitos com AlertaGeofecing
+    // Relacionamento Um-para-Muitos com AlertaGeofencing
     @OneToMany(mappedBy = "pet", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
-    private List<AlertaGeofecing> alertaGeofecing = new ArrayList<>();
+    private List<AlertaGeofencing> alertaGeofencing = new ArrayList<>();
 
     @NotBlank
     @Column(nullable = false)

@@ -6,11 +6,11 @@ import lombok.*;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "alerta_geofecing")
+@Table(name = "alerta_geofencing")
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class AlertaGeofecing {
+public class AlertaGeofencing {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -18,12 +18,12 @@ public class AlertaGeofecing {
 
     // Relacionamento Muitos-para-Um com Pet
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "pet_id", nullable = false)
+    @JoinColumn(name = "pet_id", referencedColumnName = "id", nullable = false)
     private Pet pet;
 
     // Relacionamento Muitos-para-Um com HistoricoLocalizacao
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "historico_localizacao_id", referencedColumnName = "id", nullable = false)
+    @JoinColumn(name = "historico_id", referencedColumnName = "id", nullable = false)
     private HistoricoLocalizacao historicoLocalizacao;
 
     @Column(nullable = false, length = 255)
@@ -32,7 +32,7 @@ public class AlertaGeofecing {
     @Column(nullable = false)
     private boolean visualizado;
 
-    @Column(nullable = false)
+    @Column(nullable = false, name = "data_disparo")
     private LocalDateTime data;
 
     @PrePersist
