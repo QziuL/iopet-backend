@@ -25,7 +25,7 @@ public class HistoricoLocalizacao {
 
     // Relacionamento Muitos-para-Um com AlertaGeofecing
     @OneToMany(mappedBy = "historicoLocalizacao", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
-    private List<AlertaGeofecing> alertaGeofecing = new ArrayList<>();
+    private List<AlertaGeofencing> alertaGeofencing = new ArrayList<>();
 
     @Column(nullable = false)
     private float latitude;
