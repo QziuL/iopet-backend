@@ -7,7 +7,6 @@ import java.util.Optional;
 import java.util.UUID;
 
 public interface ITutorService {
-    //List<Tutor> listar();
     Optional<Tutor> encontrarPorUuid(UUID uuid);
     Optional<Tutor> encontrarPorEmail(String email);
     Tutor cadastrar(Tutor tutor); // To-Do TutorDTO

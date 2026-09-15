@@ -6,9 +6,7 @@ import github.qziul.iopet.service.ITutorService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 
 @Service
 public class ImplTutorService implements ITutorService {
@@ -18,11 +16,6 @@ public class ImplTutorService implements ITutorService {
     public ImplTutorService(TutorRepository tutorRepository) {
         this.tutorRepository = tutorRepository;
     }
-
-//    @Override
-//    public List<Tutor> listar() {
-//        return List.of();
-//    }
 
     @Override
     public Optional<Tutor> encontrarPorUuid(UUID uuid) {
