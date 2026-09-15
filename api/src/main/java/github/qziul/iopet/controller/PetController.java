@@ -1,6 +1,7 @@
 package github.qziul.iopet.controller;
 
 import github.qziul.iopet.controller.dto.request.PetRequestDTO;
+import github.qziul.iopet.controller.dto.request.VincularDispositivoRequestDTO;
 import github.qziul.iopet.controller.dto.response.PetResponseDTO;
 import github.qziul.iopet.domain.model.Pet;
 import github.qziul.iopet.domain.model.Tutor;
@@ -66,10 +67,9 @@ public class PetController {
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 
-    @PutMapping("/{uuid}/vincular-dispositivo")
-    public ResponseEntity<Void> vincularDispositivoAoPet(@RequestBody String enderecoMac,
-                                                         @PathVariable UUID idPublicoPet) {
-        this.petService.vincularDispositivoIot(idPublicoPet, enderecoMac);
+    @PutMapping("/vincular-dispositivo")
+    public ResponseEntity<Void> vincularDispositivoAoPet(@RequestBody VincularDispositivoRequestDTO dto) {
+        this.petService.vincularDispositivoIot(dto.idPublicoPet(), dto.enderecoMac());
         return ResponseEntity.status(HttpStatus.OK).build();
     }
 }
