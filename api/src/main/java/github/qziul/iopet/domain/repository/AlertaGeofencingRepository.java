@@ -5,5 +5,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface AlertaGeofecingRepository extends JpaRepository<AlertaGeofencing, Long> {
+public interface AlertaGeofencingRepository extends JpaRepository<AlertaGeofencing, Long> {
 }

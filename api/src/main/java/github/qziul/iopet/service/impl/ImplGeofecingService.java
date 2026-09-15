@@ -1,16 +1,16 @@
 package github.qziul.iopet.service.impl;
 
-import github.qziul.iopet.domain.model.AlertaGeofecing;
-import github.qziul.iopet.domain.repository.AlertaGeofecingRepository;
+import github.qziul.iopet.domain.model.AlertaGeofencing;
+import github.qziul.iopet.domain.repository.AlertaGeofencingRepository;
 import github.qziul.iopet.service.IGeofencingService;
 import org.springframework.stereotype.Service;
 
 @Service
 public class ImplGeofecingService implements IGeofencingService {
-    private final AlertaGeofecingRepository alertaGeofecingRepository;
+    private final AlertaGeofencingRepository alertaGeofencingRepository;
 
-    public ImplGeofecingService(AlertaGeofecingRepository alertaGeofecingRepository) {
-        this.alertaGeofecingRepository = alertaGeofecingRepository;
+    public ImplGeofecingService(AlertaGeofencingRepository alertaGeofencingRepository) {
+        this.alertaGeofencingRepository = alertaGeofencingRepository;
     }
 
     @Override
@@ -19,7 +19,7 @@ public class ImplGeofecingService implements IGeofencingService {
     }
 
     @Override
-    public AlertaGeofecing registrarAlertaFuga(Long petId) {
+    public AlertaGeofencing registrarAlertaFuga(Long petId) {
         return null;
     }
 }
