@@ -6,6 +6,7 @@ import github.qziul.iopet.domain.model.Tutor;
 import github.qziul.iopet.service.ITutorService;
 import org.springframework.http.*;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 import java.util.Optional;
@@ -20,7 +21,15 @@ public class TutorController {
         this.tutorService = tutorService;
     }
 
-    @GetMapping("/{uuid}")
+    @GetMapping("/email/{email}")
+    public ResponseEntity<TutorResponseDTO> buscarPorEmail(@PathVariable String email) {
+        return this.tutorService.encontrarPorEmail(email)
+                .map(TutorResponseDTO::new)
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.status(HttpStatus.NOT_FOUND).build());
+    }
+
+    @GetMapping("/uuid/{uuid}")
     public ResponseEntity<TutorResponseDTO> buscarPorUuid(@PathVariable UUID uuid) {
         return this.tutorService.encontrarPorUuid(uuid)
                 .map(TutorResponseDTO::new)
