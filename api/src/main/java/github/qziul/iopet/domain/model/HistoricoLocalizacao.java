@@ -2,6 +2,7 @@ package github.qziul.iopet.domain.model;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.locationtech.jts.geom.Point;
 
 import java.time.LocalDateTime;
 import java.util.*;
@@ -18,7 +19,8 @@ public class HistoricoLocalizacao {
     private Long id;
 
     // Relacionamento Muitos-para-Um com DispositivoIoT
-    // Chave Estrangeira (FK) que apontará para a PK natural (endereco_mac) de DispositivoIot
+    // Chave Estrangeira (FK) que apontará para a PK natural (endereco_mac) de
+    // DispositivoIot
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "localizador_endereco_mac", referencedColumnName = "endereco_mac", nullable = false)
     private DispositivoIot dispositivoIot;
@@ -26,6 +28,9 @@ public class HistoricoLocalizacao {
     // Relacionamento Muitos-para-Um com AlertaGeofecing
     @OneToMany(mappedBy = "historicoLocalizacao", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     private List<AlertaGeofencing> alertaGeofencing = new ArrayList<>();
+
+    @Column(columnDefinition = "geometry(Point, 4326)", nullable = false)
+    private Point posicao;
 
     @Column(nullable = false)
     private float latitude;
@@ -37,6 +42,8 @@ public class HistoricoLocalizacao {
     private LocalDateTime data;
 
     @PrePersist
-    public void onCreate() {this.data = LocalDateTime.now();}
+    public void onCreate() {
+        this.data = LocalDateTime.now();
+    }
 
 }
