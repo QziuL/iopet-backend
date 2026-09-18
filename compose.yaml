@@ -14,5 +14,42 @@ services:
 
     environment:
       SERVER_PORT: 8080
+      RABBITMQ_HOST: rabbitmq
+      RABBITMQ_PORT: 5672
+      RABBITMQ_USERNAME: ${RABBITMQ_USERNAME:-guest}
+      RABBITMQ_PASSWORD: ${RABBITMQ_PASSWORD:-guest}
+
+    depends_on:
+      rabbitmq:
+        condition: service_healthy
 
     restart: unless-stopped
+
+  rabbitmq:
+    image: rabbitmq:3-management
+    container_name: iopet-rabbitmq
+
+    ports:
+      - "5672:5672"     # Porta AMQP (Spring Boot)
+      - "15672:15672"   # Painel Web de Gerenciamento (Dashboard)
+      - "1883:1883"     # Porta MQTT (telemetria do ESP32-C3)
+
+    environment:
+      RABBITMQ_DEFAULT_USER: ${RABBITMQ_USERNAME:-guest}
+      RABBITMQ_DEFAULT_PASS: ${RABBITMQ_PASSWORD:-guest}
+
+    volumes:
+      - rabbitmq_data:/var/lib/rabbitmq
+
+    healthcheck:
+      test: ["CMD", "rabbitmq-diagnostics", "-q", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 15s
+
+    restart: unless-stopped
+
+volumes:
+  rabbitmq_data:
+    driver: local
