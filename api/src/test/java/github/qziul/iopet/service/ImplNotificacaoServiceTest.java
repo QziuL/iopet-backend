@@ -4,6 +4,7 @@ import com.google.firebase.messaging.FirebaseMessaging;
 import com.google.firebase.messaging.FirebaseMessagingException;
 import com.google.firebase.messaging.Message;
 import github.qziul.iopet.domain.model.AlertaGeofencing;
+import github.qziul.iopet.domain.model.DispositivoIot;
 import github.qziul.iopet.domain.model.HistoricoLocalizacao;
 import github.qziul.iopet.domain.model.Pet;
 import github.qziul.iopet.domain.model.Tutor;
@@ -128,4 +129,32 @@ class ImplNotificacaoServiceTest {
 
         verify(firebaseMessaging, times(1)).send(any(Message.class));
     }
+
+    @Test
+    @DisplayName("Deve enviar alerta de bateria baixa para o tópico do tutor")
+    void deveEnviarAlertaBateriaBaixaComSucesso() throws Exception {
+        UUID tutorUuid = UUID.randomUUID();
+        Tutor tutor = new Tutor();
+        tutor.setId(1L);
+        tutor.setUuid(tutorUuid);
+        tutor.setNome("Maria");
+
+        Pet pet = new Pet();
+        pet.setId(5L);
+        pet.setUuid(UUID.randomUUID());
+        pet.setNome("Pipoca");
+        pet.setTutor(tutor);
+
+        DispositivoIot dispositivo = new DispositivoIot();
+        dispositivo.setEnderecoMac("74:EC:B2:2A:14:FF");
+        dispositivo.setPet(pet);
+        dispositivo.setBateriaNivel(15);
+
+        when(firebaseMessaging.send(any(Message.class))).thenReturn("msg-bateria-1");
+
+        assertDoesNotThrow(() -> notificacaoService.enviarAlertaBateriaBaixa(dispositivo, 15));
+
+        verify(firebaseMessaging, times(1)).send(any(Message.class));
+    }
 }
+
