@@ -2,6 +2,7 @@ package github.qziul.iopet.service.impl;
 
 import com.google.firebase.messaging.*;
 import github.qziul.iopet.domain.model.AlertaGeofencing;
+import github.qziul.iopet.domain.model.DispositivoIot;
 import github.qziul.iopet.domain.model.HistoricoLocalizacao;
 import github.qziul.iopet.domain.model.Pet;
 import github.qziul.iopet.domain.model.Tutor;
@@ -80,6 +81,49 @@ public class ImplNotificacaoService implements INotificacaoService {
                 dados.put("longitude", String.valueOf(historico.getLongitude()));
             }
         }
+
+        enviarPorTopico(topico, titulo, corpo, pet.getUrlFoto(), dados);
+    }
+
+    @Override
+    public void enviarAlertaBateriaBaixa(DispositivoIot dispositivo, int nivelBateria) {
+        if (dispositivo == null) {
+            log.warn("Dispositivo nulo ao tentar enviar alerta de bateria baixa.");
+            return;
+        }
+
+        Pet pet = dispositivo.getPet();
+        if (pet == null) {
+            log.warn("Dispositivo '{}' não possui pet vinculado. Alerta de bateria baixa cancelado.",
+                    dispositivo.getEnderecoMac());
+            return;
+        }
+
+        Tutor tutor = pet.getTutor();
+        if (tutor == null || tutor.getUuid() == null) {
+            log.warn("Pet '{}' (id={}) não possui tutor associado ou UUID do tutor é nulo. Alerta de bateria baixa cancelado.",
+                    pet.getNome(), pet.getId());
+            return;
+        }
+
+        String topico = "tutor-" + tutor.getUuid();
+        String nomePet = pet.getNome() != null ? pet.getNome() : "Seu pet";
+        String titulo = "⚠️ Bateria Fraca: " + nomePet;
+        String corpo = String.format("A bateria da coleira de %s está em %d%%. Conecte-a ao carregador para manter o monitoramento.",
+                nomePet, nivelBateria);
+
+        Map<String, String> dados = new HashMap<>();
+        dados.put("tipo", "ALERTA_BATERIA_BAIXA");
+        dados.put("deviceId", dispositivo.getEnderecoMac());
+        dados.put("bateriaNivel", String.valueOf(nivelBateria));
+        if (pet.getId() != null) {
+            dados.put("petId", String.valueOf(pet.getId()));
+        }
+        if (pet.getUuid() != null) {
+            dados.put("petUuid", pet.getUuid().toString());
+        }
+        dados.put("petNome", nomePet);
+        dados.put("dataDisparo", java.time.LocalDateTime.now().toString());
 
         enviarPorTopico(topico, titulo, corpo, pet.getUrlFoto(), dados);
     }
