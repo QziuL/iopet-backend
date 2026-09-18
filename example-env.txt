@@ -1,3 +1,8 @@
 SPRING_DATASOURCE_URL='url'
 SPRING_DATASOURCE_USERNAME='name'
 SPRING_DATASOURCE_PASSWORD='password'
+API_KEY='secret'
+
+# RabbitMQ (Opcional - padrão: guest / guest)
+RABBITMQ_USERNAME='guest'
+RABBITMQ_PASSWORD='guest'
