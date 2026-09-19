@@ -22,7 +22,7 @@ public class DispositivoIot {
     private String enderecoMac;
 
     // Relacionamento Um-para-Um com Pet
-    @OneToOne(cascade = CascadeType.ALL)
+    @OneToOne
     @JoinColumn(name = "pet_id", referencedColumnName = "id")
     private Pet pet;
 
