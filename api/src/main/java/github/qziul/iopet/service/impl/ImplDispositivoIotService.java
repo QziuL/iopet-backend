@@ -1,5 +1,6 @@
 package github.qziul.iopet.service.impl;
 
+import github.qziul.iopet.controller.dto.response.DispositivoResponseDTO;
 import github.qziul.iopet.domain.model.DispositivoIot;
 import github.qziul.iopet.domain.model.Pet;
 import github.qziul.iopet.domain.repository.DispositivoIotRepository;
@@ -39,6 +40,15 @@ public class ImplDispositivoIotService implements IDispositivoIotService {
         dispositivo.setEnderecoMac(enderecoMac);
         dispositivo.setAtivo(true);
         this.repository.save(dispositivo);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public java.util.List<DispositivoResponseDTO> listarDispositivosDoTutor(Long tutorId) {
+        java.util.List<DispositivoIot> dispositivos = this.repository.findByPetTutorId(tutorId);
+        return dispositivos.stream()
+                .map(DispositivoResponseDTO::new)
+                .toList();
     }
 
     private DispositivoIot cadastrar(String enderecoMac) {
