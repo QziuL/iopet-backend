@@ -33,16 +33,17 @@ public class AuthController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<String> efetuarLogin(@RequestBody DadosAuthRequestDTO dados) {
+    public ResponseEntity<AuthResponseDTO> efetuarLogin(@RequestBody DadosAuthRequestDTO dados) {
         var tokenAutenticacao = new UsernamePasswordAuthenticationToken(dados.email(), dados.senha());
 
         // Verifica se o e-mail e a senha batem com o banco de dados
         var authentication = manager.authenticate(tokenAutenticacao);
+        var tutor = (Tutor) Objects.requireNonNull(authentication.getPrincipal());
 
         // Se bateu, gera o token JWT
-        var tokenJWT = tokenService.gerarToken((Tutor) Objects.requireNonNull(authentication.getPrincipal()));
+        var tokenJWT = tokenService.gerarToken(tutor);
 
-        return ResponseEntity.ok(tokenJWT);
+        return ResponseEntity.ok(new AuthResponseDTO(tokenJWT, new TutorResponseDTO(tutor)));
     }
 
     @PostMapping("/register")
