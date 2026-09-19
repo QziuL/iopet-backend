@@ -9,10 +9,10 @@ import java.util.*;
 
 @Repository
 public interface PetRepository extends JpaRepository<Pet, Long> {
-    @EntityGraph(attributePaths = {"tutor"})
+    @EntityGraph(attributePaths = {"tutor", "dispositivoIot"})
     Optional<Pet> findByUuid(UUID uuid);
-    @EntityGraph(attributePaths = {"tutor"})
+    @EntityGraph(attributePaths = {"tutor", "dispositivoIot"})
     Optional<Pet> findByNome(String nome);
-    @EntityGraph(attributePaths = {"tutor"})
+    @EntityGraph(attributePaths = {"tutor", "dispositivoIot"})
     List<Pet> findByTutorId(Long tutorId);
 }
