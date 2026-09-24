@@ -29,7 +29,7 @@ public class HistoricoLocalizacao {
     @OneToMany(mappedBy = "historicoLocalizacao", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     private List<AlertaGeofencing> alertaGeofencing = new ArrayList<>();
 
-    @Column(columnDefinition = "geometry(Point, 4326)", nullable = false)
+    @Column(columnDefinition = "geometry(Point, 4326)", nullable = false, name = "ponto")
     private Point posicao;
 
     @Column(nullable = false)
@@ -38,7 +38,7 @@ public class HistoricoLocalizacao {
     @Column(nullable = false)
     private float longitude;
 
-    @Column(nullable = false)
+    @Column(nullable = false, name = "data_registro")
     private LocalDateTime data;
 
     @PrePersist
