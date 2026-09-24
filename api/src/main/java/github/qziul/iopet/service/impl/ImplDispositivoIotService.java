@@ -33,12 +33,21 @@ public class ImplDispositivoIotService implements IDispositivoIotService {
         DispositivoIot dispositivo = this.repository.findById(enderecoMac)
                                                     .orElseGet(() -> this.cadastrar(enderecoMac));
 
-        if(dispositivo.getPet() != null)
+        if (dispositivo.getPet() != null && !dispositivo.getPet().getId().equals(pet.getId())) {
             throw new ResponseStatusException(HttpStatus.CONFLICT, "Dispositivo já está vinculado a outro pet.");
+        }
+
+        // Se o pet já possuía outro dispositivo vinculado, desvincula o anterior
+        if (pet.getDispositivoIot() != null && !pet.getDispositivoIot().getEnderecoMac().equalsIgnoreCase(enderecoMac)) {
+            DispositivoIot dispAnterior = pet.getDispositivoIot();
+            dispAnterior.setPet(null);
+            this.repository.save(dispAnterior);
+        }
 
         dispositivo.setPet(pet);
         dispositivo.setEnderecoMac(enderecoMac);
         dispositivo.setAtivo(true);
+        pet.setDispositivoIot(dispositivo);
         this.repository.save(dispositivo);
     }
 
