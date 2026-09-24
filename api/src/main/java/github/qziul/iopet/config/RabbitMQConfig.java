@@ -4,6 +4,8 @@ import org.springframework.amqp.core.*;
 import org.springframework.amqp.rabbit.config.SimpleRabbitListenerContainerFactory;
 import org.springframework.amqp.rabbit.connection.ConnectionFactory;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
+import github.qziul.iopet.controller.dto.request.TelemetriaRequestDTO;
+import org.springframework.amqp.support.converter.DefaultClassMapper;
 import org.springframework.amqp.support.converter.JacksonJsonMessageConverter;
 import org.springframework.amqp.support.converter.MessageConverter;
 import org.springframework.beans.factory.annotation.Value;
@@ -40,6 +42,9 @@ public class RabbitMQConfig {
     @Bean
     public JacksonJsonMessageConverter messageConverter() {
         JacksonJsonMessageConverter converter = new JacksonJsonMessageConverter();
+        DefaultClassMapper classMapper = new DefaultClassMapper();
+        classMapper.setDefaultType(TelemetriaRequestDTO.class);
+        converter.setClassMapper(classMapper);
         converter.setAlwaysConvertToInferredType(true);
         return converter;
     }
