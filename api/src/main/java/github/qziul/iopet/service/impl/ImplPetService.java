@@ -24,7 +24,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.*;
 
 @Service
@@ -212,13 +214,33 @@ public class ImplPetService implements IPetService {
     @Override
     @Transactional(readOnly = true)
     public List<LocationPointDTO> obterHistorico(UUID petUuid) {
+        return obterHistorico(petUuid, null, null, null, 100);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<LocationPointDTO> obterHistorico(UUID petUuid, LocalDate data, LocalDateTime inicio, LocalDateTime fim, Integer limite) {
         Pet pet = this.petRepository.findByUuid(petUuid).orElseThrow(
                 () -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Pet não encontrado.")
         );
         DispositivoIot dispositivo = pet.getDispositivoIot();
         if (dispositivo == null) return List.of();
 
-        List<HistoricoLocalizacao> historicos = historicoRepository.findByDispositivoIotOrderByDataDesc(dispositivo, PageRequest.of(0, 50));
+        if (data != null && inicio == null && fim == null) {
+            inicio = data.atStartOfDay();
+            fim = data.atTime(LocalTime.MAX);
+        }
+
+        List<HistoricoLocalizacao> historicos;
+        if (inicio != null && fim != null) {
+            historicos = historicoRepository.findByDispositivoIotAndDataBetweenOrderByDataAsc(dispositivo, inicio, fim);
+        } else {
+            int max = (limite != null && limite > 0) ? Math.min(limite, 1000) : 100;
+            historicos = historicoRepository.findByDispositivoIotOrderByDataDesc(dispositivo, PageRequest.of(0, max));
+            historicos = new ArrayList<>(historicos);
+            Collections.reverse(historicos);
+        }
+
         return historicos.stream()
                 .map(h -> new LocationPointDTO(
                         (double) h.getLatitude(),

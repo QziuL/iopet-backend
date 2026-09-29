@@ -13,4 +13,9 @@ import java.util.Optional;
 public interface HistoricoLocalizacaoRepository extends JpaRepository<HistoricoLocalizacao, Long> {
     Optional<HistoricoLocalizacao> findTop1ByDispositivoIotOrderByDataDesc(DispositivoIot dispositivoIot);
     List<HistoricoLocalizacao> findByDispositivoIotOrderByDataDesc(DispositivoIot dispositivoIot, Pageable pageable);
+    List<HistoricoLocalizacao> findByDispositivoIotAndDataBetweenOrderByDataAsc(
+            DispositivoIot dispositivoIot,
+            java.time.LocalDateTime dataInicio,
+            java.time.LocalDateTime dataFim
+    );
 }

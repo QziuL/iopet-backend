@@ -23,4 +23,5 @@ public interface IPetService {
     GeofenceResponseDTO salvarGeofence(UUID petUuid, GeofenceRequestDTO dto);
     TrackingResponseDTO obterTracking(UUID petUuid);
     List<LocationPointDTO> obterHistorico(UUID petUuid);
+    List<LocationPointDTO> obterHistorico(UUID petUuid, java.time.LocalDate data, java.time.LocalDateTime inicio, java.time.LocalDateTime fim, Integer limite);
 }

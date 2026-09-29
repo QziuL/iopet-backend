@@ -10,11 +10,14 @@ import github.qziul.iopet.controller.dto.response.TrackingResponseDTO;
 import github.qziul.iopet.domain.model.Pet;
 import github.qziul.iopet.domain.model.Tutor;
 import github.qziul.iopet.service.IPetService;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -98,7 +101,12 @@ public class PetController {
     }
 
     @GetMapping("/{uuid}/historico")
-    public ResponseEntity<List<LocationPointDTO>> obterHistorico(@PathVariable UUID uuid) {
-        return ResponseEntity.ok(this.petService.obterHistorico(uuid));
+    public ResponseEntity<List<LocationPointDTO>> obterHistorico(
+            @PathVariable UUID uuid,
+            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate data,
+            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime inicio,
+            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime fim,
+            @RequestParam(required = false, defaultValue = "300") Integer limite) {
+        return ResponseEntity.ok(this.petService.obterHistorico(uuid, data, inicio, fim, limite));
     }
 }
