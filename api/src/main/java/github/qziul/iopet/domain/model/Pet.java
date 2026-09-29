@@ -51,7 +51,7 @@ public class Pet {
     @Column(nullable = false)
     private String porte;
 
-    @Column(name = "url_foto", nullable = false)
+    @Column(name = "url_foto", columnDefinition = "TEXT")
     private String urlFoto;
 
     @Column( name = "data_nascimento", nullable = false)

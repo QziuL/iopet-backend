@@ -47,7 +47,7 @@ public class Tutor implements UserDetails {
     @Column(nullable = false, unique = true, length = 20)
     private String telefone;
 
-    @Column(name = "url_foto")
+    @Column(name = "url_foto", columnDefinition = "TEXT")
     private String urlFoto;
 
     @Column(name = "criado_em", nullable = false, updatable = false)
