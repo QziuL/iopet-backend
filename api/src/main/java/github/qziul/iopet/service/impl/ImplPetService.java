@@ -185,11 +185,18 @@ public class ImplPetService implements IPetService {
                     "Posição atual do dispositivo"
             );
         } else {
-            locationPoint = new LocationPointDTO(-25.514, -48.522, LocalDateTime.now().toString(), "Aguardando sinal GPS");
+            String timestamp = dispositivo.getUltimaComunicacao() != null
+                    ? dispositivo.getUltimaComunicacao().toString()
+                    : null;
+            locationPoint = new LocationPointDTO(-25.514, -48.522, timestamp, "Aguardando sinal GPS");
         }
 
         boolean online = dispositivo.isAtivo() && dispositivo.getUltimaComunicacao() != null &&
                 dispositivo.getUltimaComunicacao().isAfter(LocalDateTime.now().minusMinutes(30));
+
+        String lastUpdated = dispositivo.getUltimaComunicacao() != null
+                ? dispositivo.getUltimaComunicacao().toString()
+                : ultimoHistorico.map(h -> h.getData().toString()).orElse(null);
 
         return new TrackingResponseDTO(
                 pet.getUuid(),
@@ -198,7 +205,7 @@ public class ImplPetService implements IPetService {
                 dispositivo.getBateriaNivel(),
                 online ? "online" : "offline",
                 12,
-                dispositivo.getUltimaComunicacao() != null ? dispositivo.getUltimaComunicacao().toString() : LocalDateTime.now().toString()
+                lastUpdated
         );
     }
 
