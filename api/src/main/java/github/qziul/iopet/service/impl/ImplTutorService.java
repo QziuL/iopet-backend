@@ -63,6 +63,18 @@ public class ImplTutorService implements ITutorService {
     }
 
     @Override
+    public void recuperarSenha(String email, String novaSenha) {
+        Tutor tutor = tutorRepository.findByEmail(email).orElseThrow(
+                () -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Nenhuma conta encontrada para este e-mail.")
+        );
+        if (novaSenha == null || novaSenha.length() < 6) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Nova senha deve ter ao menos 6 caracteres.");
+        }
+        tutor.setSenha(passwordEncoder.encode(novaSenha));
+        tutorRepository.save(tutor);
+    }
+
+    @Override
     public void excluirConta(UUID uuid) {
         Optional<Tutor> tutor = tutorRepository.findByUuid(uuid);
         tutor.ifPresent(tutorRepository::delete);

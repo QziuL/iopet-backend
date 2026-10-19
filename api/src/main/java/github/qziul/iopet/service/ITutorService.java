@@ -12,5 +12,6 @@ public interface ITutorService {
     Tutor cadastrar(Tutor tutor);
     Tutor atualizar(UUID uuid, AtualizarTutorRequestDTO dto);
     void alterarSenha(UUID uuid, String senhaAtual, String novaSenha);
+    void recuperarSenha(String email, String novaSenha);
     void excluirConta(UUID uuid);
 }

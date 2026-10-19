@@ -2,6 +2,7 @@ package github.qziul.iopet.controller;
 
 import github.qziul.iopet.config.TokenService;
 import github.qziul.iopet.controller.dto.request.DadosAuthRequestDTO;
+import github.qziul.iopet.controller.dto.request.RecuperarSenhaRequestDTO;
 import github.qziul.iopet.controller.dto.request.TutorRequestDTO;
 import github.qziul.iopet.controller.dto.response.AuthResponseDTO;
 import github.qziul.iopet.controller.dto.response.TutorResponseDTO;
@@ -69,5 +70,23 @@ public class AuthController {
         return ResponseEntity
                 .status(HttpStatus.CREATED)
                 .body(new AuthResponseDTO(tokenJWT, new TutorResponseDTO(tutorSalvo)));
+    }
+
+    @PostMapping("/recuperar-senha")
+    public ResponseEntity<Void> recuperarSenha(@RequestBody RecuperarSenhaRequestDTO dados) {
+        if (dados.email() == null || dados.email().isBlank()) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+        }
+
+        // Quando apenas o e-mail é enviado (etapa de verificação da conta)
+        if (dados.novaSenha() == null || dados.novaSenha().isBlank()) {
+            if (this.tutorService.encontrarPorEmail(dados.email().trim()).isEmpty()) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+            }
+            return ResponseEntity.ok().build();
+        }
+
+        this.tutorService.recuperarSenha(dados.email().trim(), dados.novaSenha());
+        return ResponseEntity.ok().build();
     }
 }
